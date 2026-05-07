@@ -44,6 +44,16 @@ export const loadUser = createAsyncThunk("user/loadUser", async (_, { rejectWith
   }
 })
 
+export const logout = createAsyncThunk("user/logout", async (_, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.post("/api/v1/logout", {withCredentials: true})
+    return data
+
+  } catch (error) {
+    return rejectWithValue(error.response?.data || "Logout failed")
+  }
+})
+
 const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -102,7 +112,7 @@ const userSlice = createSlice({
         state.isAuthenticated = false
       })
 
-    // Loading user
+    // Loading User
     builder.addCase(loadUser.pending, (state) => {
       state.loading = true
       state.error = null
@@ -118,6 +128,22 @@ const userSlice = createSlice({
         state.error = action.payload?.message || "Failed to load user profile"
         state.user = null
         state.isAuthenticated = false
+      })
+
+    // Logout User
+    builder.addCase(logout.pending, (state) => {
+      state.loading = true
+      state.error = null
+    })
+      .addCase(logout.fulfilled, (state) => {
+        state.loading = false
+        state.error = null
+        state.user = null
+        state.isAuthenticated = false
+      })
+      .addCase(logout.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload?.message || "Failed to load user profile"
       })
   }
 })

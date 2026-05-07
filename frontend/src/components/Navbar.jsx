@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "../componentStyles/Navbar.css";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import {
   ShoppingCart,
   Search,
@@ -16,16 +17,17 @@ const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
   const toggelMenu = () => setIsMenuOpen(!isMenuOpen);
-  const isAuthenticated = false;
-  const navigate = useNavigate()
-  const handleSearchSubmit = (e) =>{ e.preventDefault()
+  const { isAuthenticated } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/products?keyword=${encodeURIComponent(searchQuery.trim())}`)
+      navigate(`/products?keyword=${encodeURIComponent(searchQuery.trim())}`);
     } else {
-      navigate('/products')
+      navigate("/products");
     }
-    setSearchQuery("")
-  }
+    setSearchQuery("");
+  };
 
   return (
     <nav className="navbar">
@@ -57,7 +59,8 @@ const Navbar = () => {
 
         <div className="navbar-icons">
           <div className="search-container">
-            <form className={`search-form ${isSearchOpen ? "active" : ""}`}
+            <form
+              className={`search-form ${isSearchOpen ? "active" : ""}`}
               onSubmit={handleSearchSubmit}
             >
               <input
