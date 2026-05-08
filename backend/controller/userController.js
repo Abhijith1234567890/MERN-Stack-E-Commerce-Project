@@ -4,7 +4,7 @@ import HandleError from "../utils/handleError.js"
 import { sendToken } from "../utils/jwtToken.js"
 import { sendEmail } from "../utils/sendEmail.js"
 import crypto from "crypto"
-import {v2 as cloudinary} from "cloudinary"
+import { v2 as cloudinary } from "cloudinary"
 
 export const registerUser = handleAsyncError(async (req, res, next) => {
   const { name, email, password, avatar } = req.body
@@ -165,11 +165,27 @@ export const updatePassword = handleAsyncError(async (req, res, next) => {
 
 // Updating user profile
 export const updateProfile = handleAsyncError(async (req, res, next) => {
-  const { name, email } = req.body
+  const { name, email, avatar } = req.body
   const updateUserDetails = {
     name,
     email
   }
+  if (avatar !== "") {
+    const user = await User.findById(req.user.id)
+    const imageId = user.avatar.public_id
+    await cloudinary.uploader.destroy(imageId)
+    const myCloud = await cloudinary.uploader.upload(avatar, {
+      folder: "avatars",
+      width: "150",
+      crop: "scale"
+    })
+    
+    updateUserDetails.avatar ={
+      public_id: myCloud.public_id,
+      url: myCloud.secure_url
+    }
+  }
+
   const user = await User.findByIdAndUpdate(req.user.id, updateUserDetails, {
     new: true,
     runValidators: true
@@ -185,7 +201,7 @@ export const updateProfile = handleAsyncError(async (req, res, next) => {
 })
 
 // Admin - Getting user information
-export const getUsersList = handleAsyncError(async(req, res, next) => {
+export const getUsersList = handleAsyncError(async (req, res, next) => {
   const users = await User.find()
   res.status(200).json({
     success: true,
@@ -194,7 +210,7 @@ export const getUsersList = handleAsyncError(async(req, res, next) => {
 })
 
 // Admin = Getting single user information
-export const getSingleUser = handleAsyncError(async(req, res, next) => {  
+export const getSingleUser = handleAsyncError(async (req, res, next) => {
   const user = await User.findById(req.params.id)
   if (!user) {
     return next(new HandleError(`User doesn't exist with this id: ${req.params.id}`, 400))
@@ -207,8 +223,8 @@ export const getSingleUser = handleAsyncError(async(req, res, next) => {
 })
 
 // Admin - Changing role
-export const updateUserRole = handleAsyncError(async(req, res, next) => {  
-  const {role} = req.body
+export const updateUserRole = handleAsyncError(async (req, res, next) => {
+  const { role } = req.body
   const newUserData = {
     role
   }
@@ -216,7 +232,7 @@ export const updateUserRole = handleAsyncError(async(req, res, next) => {
     new: true,
     runValidators: true
   })
-  if(!user) {
+  if (!user) {
     return next(new HandleError("User doesn't exist", 400))
   }
 
@@ -227,7 +243,7 @@ export const updateUserRole = handleAsyncError(async(req, res, next) => {
 })
 
 // Admin - Delete User Profile
-export const deleteUser = handleAsyncError(async(req, res, next) => {  
+export const deleteUser = handleAsyncError(async (req, res, next) => {
   const user = await User.findById(req.params.id)
 
   if (!user) {

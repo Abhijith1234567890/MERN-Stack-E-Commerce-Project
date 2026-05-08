@@ -9,6 +9,9 @@ import { useEffect } from "react";
 import { loadUser } from "./features/user/userSlice";
 import UserDashboard from "./user/UserDashboard";
 import Profile from "./user/Profile";
+import ProtectedRoute from "./componentStyles/ProtectedRoute";
+import UpdateProfile from "./user/UpdateProfile";
+import UpdatePassword from "./user/UpdatePassword";
 
 const App = () => {
   const { isAuthenticated, user } = useSelector((state) => state.user);
@@ -30,7 +33,18 @@ const App = () => {
         <Route path="/products/:keyword" element={<Products />} />
         <Route path="/register" element={<Resgister />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route
+          path="/profile"
+          element={<ProtectedRoute element={<Profile />} />}
+        />
+        <Route
+          path="/profile/update"
+          element={<ProtectedRoute element={<UpdateProfile />} />}
+        />
+        <Route
+          path="/password/update"
+          element={<ProtectedRoute element={<UpdatePassword />} />}
+        />
       </Routes>
       {isAuthenticated && <UserDashboard user={user} />}
     </Router>
