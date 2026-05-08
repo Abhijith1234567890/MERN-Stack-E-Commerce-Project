@@ -46,7 +46,7 @@ export const loadUser = createAsyncThunk("user/loadUser", async (_, { rejectWith
 
 export const logout = createAsyncThunk("user/logout", async (_, { rejectWithValue }) => {
   try {
-    const { data } = await axios.post("/api/v1/logout", {withCredentials: true})
+    const { data } = await axios.post("/api/v1/logout", { withCredentials: true })
     return data
 
   } catch (error) {
@@ -66,7 +66,7 @@ export const updateProfile = createAsyncThunk("user/updateProfile", async (userD
     return data
 
   } catch (error) {
-    return rejectWithValue(error.response?.data || {message: "Profile update failed. Please try again later"})
+    return rejectWithValue(error.response?.data || { message: "Profile update failed. Please try again later" })
   }
 })
 
@@ -83,6 +83,38 @@ export const updatePassword = createAsyncThunk("user/updatePassword", async (for
 
   } catch (error) {
     return rejectWithValue(error.response?.data || "Password update failed. Please try again later")
+  }
+})
+
+export const forgotPassword = createAsyncThunk("user/forgotPassword", async (email, { rejectWithValue }) => {
+  try {
+    const config = {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }
+
+    const { data } = await axios.post("/api/v1/password/forgot", email, config)
+    return data
+
+  } catch (error) {
+    return rejectWithValue(error.response?.data || { message: "Email send failed" })
+  }
+})
+
+export const resetPassword = createAsyncThunk("user/resetPassword", async ({token, userData}, { rejectWithValue }) => {
+  try {
+    const config = {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }
+
+    const { data } = await axios.post(`/api/v1/reset/${token}`, userData, config)
+    return data
+
+  } catch (error) {
+    return rejectWithValue(error.response?.data || { message: "Email send failed" })
   }
 })
 
@@ -209,6 +241,39 @@ const userSlice = createSlice({
       .addCase(updatePassword.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload?.message || "Password update failed. Please try again later"
+      })
+
+    // Forgot Password
+    builder.addCase(forgotPassword.pending, (state) => {
+      state.loading = true
+      state.error = null
+    })
+      .addCase(forgotPassword.fulfilled, (state, action) => {
+        state.loading = false
+        state.error = null
+        state.success = action.payload?.success
+        state.message = action.payload?.message
+      })
+      .addCase(forgotPassword.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload?.message || "Email send failed"
+      })
+
+    // Reset Password
+    builder.addCase(resetPassword.pending, (state) => {
+      state.loading = true
+      state.error = null
+    })
+      .addCase(resetPassword.fulfilled, (state, action) => {
+        state.loading = false
+        state.error = null
+        state.success = action.payload?.success
+        state.user = null,
+        state.isAuthenticated = false
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload?.message || "Email send failed"
       })
   }
 })
