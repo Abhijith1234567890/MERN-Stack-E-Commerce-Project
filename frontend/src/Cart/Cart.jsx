@@ -14,8 +14,8 @@ const Cart = () => {
     0,
   );
   const tax = subtotal * 0.18;
-  const shipping = subtotal > 500 ? 0 : 50;
-  const total = subtotal + tax + shipping;
+  const shippingCharges = subtotal > 500 ? 0 : 50;
+  const total = subtotal + tax + shippingCharges;
   const navigate = useNavigate()
 
   const checkoutHandler = () => {
@@ -69,7 +69,7 @@ const Cart = () => {
               </div>
               <div className="summary-item">
                 <p className="summary-label">Shipping:</p>
-                <p className="summary-value">{shipping}/-</p>
+                <p className="summary-value">{shippingCharges}/-</p>
               </div>
               <div className="summary-total">
                 <p className="total-label">Total:</p>
