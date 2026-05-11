@@ -16,9 +16,9 @@ const Shipping = () => {
   const [address, setAddress] = useState(shippingInfo.address || "");
   const [pinCode, setPinCode] = useState(shippingInfo.pinCode || "");
   const [phoneNumber, setPhoneNumber] = useState(shippingInfo.phoneNumber || "");
-  const [country, setCountry] = useState(useState.country || "");
-  const [state, setState] = useState(useState.state || "");
-  const [city, setCity] = useState(useState.city || "");
+  const [country, setCountry] = useState(shippingInfo.country || "");
+  const [state, setState] = useState(shippingInfo.state || "");
+  const [city, setCity] = useState(shippingInfo.city || "");
   const navigate = useNavigate();
 
   const shippingInfoSubmit = (e) => {
