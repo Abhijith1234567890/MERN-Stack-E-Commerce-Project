@@ -35,6 +35,23 @@ export const getProductDetails = createAsyncThunk("product/getProductDetails", a
   }
 })
 
+// Product Review
+export const createReview = createAsyncThunk("product/createReview", async ({rating, comment, productId}, { rejectWithValue }) => {
+  try {
+    const config = {
+      Headers: {
+        "Content-Type" : "application/json"
+      }
+    }
+
+    const { data } = await axios.put("/api/v1/review", {rating, comment, productId}, config)
+    return data
+
+  } catch (error) {
+    return rejectWithValue(error.response?.data || "An error occurred")
+  }
+})
+
 const productSlice = createSlice({
   name: "product",
   initialState: {
@@ -44,11 +61,16 @@ const productSlice = createSlice({
     error: null,
     product: null,
     resultsPerPage: 4,
-    totalPages: 0
+    totalPages: 0,
+    reviewSuccess: false,
+    reviewLoading: false
   },
   reducers: {
     removeErrors: (state) => {
       state.error = null
+    },
+    removeSuccess: (state) => {
+      state.reviewSuccess = false
     }
   },
   extraReducers: (builder) => {
@@ -85,8 +107,21 @@ const productSlice = createSlice({
         state.loading = false
         state.error = action.payload || "Something went wrong"
       })
+
+    builder.addCase(createReview.pending, (state) => {
+      state.reviewLoading = true
+      state.error = null
+    })
+      .addCase(createReview.fulfilled, (state) => {
+        state.reviewLoading = false
+        state.reviewSuccess = true
+      })
+      .addCase(createReview.rejected, (state, action) => {
+        state.reviewLoading = false
+        state.error = action.payload || "Something went wrong"
+      })
   }
 })
 
-export const { removeErrors } = productSlice.actions
+export const { removeErrors, removeSuccess } = productSlice.actions
 export default productSlice.reducer;
