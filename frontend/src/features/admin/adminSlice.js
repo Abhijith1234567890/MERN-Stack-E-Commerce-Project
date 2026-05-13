@@ -30,7 +30,7 @@ export const createProduct = createAsyncThunk("admin/createProduct", async (prod
 })
 
 // Update Product
-export const updateProduct = createAsyncThunk("admin/updateProduct", async ({id, formData}, { rejectWithValue }) => {
+export const updateProduct = createAsyncThunk("admin/updateProduct", async ({ id, formData }, { rejectWithValue }) => {
   try {
     const config = {
       headers: {
@@ -46,6 +46,50 @@ export const updateProduct = createAsyncThunk("admin/updateProduct", async ({id,
   }
 })
 
+// Delete Product
+export const deleteProduct = createAsyncThunk("admin/deleteProduct", async (productId, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.delete(`/api/v1/admin/product/${productId}`)
+    return { productId }
+
+  } catch (error) {
+    return rejectWithValue(error.response?.data || { message: "Product Deletion Failed" })
+  }
+})
+
+// Fetch All Users
+export const fetchUsers = createAsyncThunk("admin/fetchUsers", async (_, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.get("/api/v1/admin/users")
+    return data
+
+  } catch (error) {
+    return rejectWithValue(error.response?.data || { message: "Failed to fetch users" })
+  }
+})
+
+// Get single user
+export const getSingleUser = createAsyncThunk("admin/getSingleUser", async (id, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.get(`/api/v1/admin/user/${id}`)
+    return data
+
+  } catch (error) {
+    return rejectWithValue(error.response?.data || { message: "Failed to fetch user" })
+  }
+})
+
+// Update User role
+export const updateUserRole = createAsyncThunk("admin/updateUserRole", async ({userId, role}, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.put(`/api/v1/admin/user/${userId}`, {role})
+    return data
+
+  } catch (error) {
+    return rejectWithValue(error.response?.data || { message: "Failed to update user role" })
+  }
+})
+
 const adminSlice = createSlice({
   name: "admin",
   initialState: {
@@ -53,7 +97,10 @@ const adminSlice = createSlice({
     success: false,
     loading: false,
     error: null,
-    product: {}
+    product: {},
+    deleting: {},
+    users: [],
+    user: {}
   },
   reducers: {
     removeErrors: (state) => {
@@ -78,6 +125,7 @@ const adminSlice = createSlice({
         state.error = action.payload?.message || "Error While Fetching the products"
       })
 
+    builder
       .addCase(createProduct.pending, (state) => {
         state.loading = true
         state.error = null
@@ -87,13 +135,14 @@ const adminSlice = createSlice({
         state.success = action.payload.success
         state.products.push(action.payload.product)
         console.log(state.products);
-        
+
       })
       .addCase(createProduct.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload?.message || "Product Creation Failed"
       })
 
+    builder
       .addCase(updateProduct.pending, (state) => {
         state.loading = true
         state.error = null
@@ -101,11 +150,70 @@ const adminSlice = createSlice({
       .addCase(updateProduct.fulfilled, (state, action) => {
         state.loading = false
         state.success = action.payload.success
-        state.product = action.payload.product        
+        state.product = action.payload.product
       })
       .addCase(updateProduct.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload?.message || "Product Update Failed"
+      })
+
+    builder
+      .addCase(deleteProduct.pending, (state, action) => {
+        const productId = action.meta.arg
+        state.deleting[productId] = true
+        state.error = null
+      })
+      .addCase(deleteProduct.fulfilled, (state, action) => {
+        const productId = action.payload.productId
+        state.deleting[productId] = false
+        state.products = state.products.filter(product => product._id !== action.payload.productId)
+      })
+      .addCase(deleteProduct.rejected, (state, action) => {
+        const productId = action.meta.arg
+        state.deleting[productId] = false
+        state.error = action.payload?.message || "Product Deletion Failed"
+      })
+
+      builder
+      .addCase(fetchUsers.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(fetchUsers.fulfilled, (state, action) => {
+        state.loading = false
+        state.users = action.payload.users
+      })
+      .addCase(fetchUsers.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload?.message || "Failed to fetch users"
+      })
+
+      builder
+      .addCase(getSingleUser.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(getSingleUser.fulfilled, (state, action) => {
+        state.loading = false
+        state.user = action.payload.user
+      })
+      .addCase(getSingleUser.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload?.message || "Failed to fetch user"
+      })
+
+      builder
+      .addCase(updateUserRole.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(updateUserRole.fulfilled, (state, action) => {
+        state.loading = false
+        state.success = action.payload.success
+      })
+      .addCase(updateUserRole.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload?.message || "Failed to update user role"
       })
   }
 })
