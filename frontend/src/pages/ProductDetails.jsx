@@ -20,6 +20,7 @@ const ProductDetails = () => {
   const [userRating, setUserRating] = useState(0);
   const [comment, setComment] = useState("");
   const [quantity, setQuantity] = useState(1);
+  const [selectedImage, setSelectedImage] = useState("");
   const handleRatingChange = (newRating) => {
     setUserRating(newRating);
   };
@@ -27,6 +28,8 @@ const ProductDetails = () => {
   const { loading, error, product, reviewSuccess, reviewLoading } = useSelector(
     (state) => state.product,
   );
+  console.log(product);
+
   const {
     loading: cartLoading,
     error: cartError,
@@ -125,6 +128,12 @@ const ProductDetails = () => {
     }
   }, [reviewSuccess, id, dispatch]);
 
+  useEffect(() => {
+    if (product?.image?.length > 0) {
+      setSelectedImage(product.image[0].url);
+    }
+  }, [product]);
+
   if (loading) {
     return (
       <>
@@ -153,10 +162,23 @@ const ProductDetails = () => {
         <div className="product-detail-container">
           <div className="product-image-container">
             <img
-              src={product.image[0].url}
+              src={selectedImage || product?.image?.[0]?.url}
               alt={product.name}
               className="product-detail-image"
             />
+            {product.image.length > 1 && (
+              <div className="product-thumbnails">
+                {product.image.map((img, index) => (
+                  <img
+                    key={index}
+                    src={img.url}
+                    alt={`thumbnail ${index + 1}`}
+                    className="thumbnail-image"
+                    onClick={() => setSelectedImage(img.url)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="product-info">

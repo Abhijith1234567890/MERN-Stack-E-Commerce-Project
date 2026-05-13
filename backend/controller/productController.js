@@ -2,7 +2,7 @@ import Product from "../models/productModel.js"
 import HandleError from "../utils/handleError.js"
 import handleAsyncError from "../middleware/handleAsyncError.js"
 import APIFunctionality from "../utils/apiFunctionality.js"
-import {v2 as cloudinary} from "cloudinary"
+import { v2 as cloudinary } from "cloudinary"
 
 // Creating Products
 export const createProducts = handleAsyncError(async (req, res, next) => {
@@ -15,7 +15,7 @@ export const createProducts = handleAsyncError(async (req, res, next) => {
 
   const imageLinks = []
 
-  for(let i=0; i<image.length;i++) {
+  for (let i = 0; i < image.length; i++) {
     const result = await cloudinary.uploader.upload(image[i], {
       folder: "products"
     })
@@ -71,7 +71,43 @@ export const getAllProducts = handleAsyncError(async (req, res, next) => {
 
 // Update Product
 export const updateProduct = handleAsyncError(async (req, res, next) => {
-  const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+  let product = await Product.findByIdAndUpdate(req.params.id)
+
+  if (!product) {
+    return next(new HandleError("Product not found", 404))
+  }
+
+  let images = []
+
+  if (typeof req.body.image === "String") {
+    images.push(req.body.image)
+  } else if (Array.isArray(req.body.image)) {
+    images = req.body.image
+  }
+
+  if (images.length > 0) {
+    for (let i = 0; i < product.image.length; i++) {
+      await cloudinary.uploader.destroy(product.image[i].public_id)
+    }
+
+    // Upload new images
+    const imageLinks = []
+
+    for (let i = 0; i < images.length; i++) {
+      const result = await cloudinary.uploader.upload(images[i], {
+        folder: "products"
+      })
+
+      imageLinks.push({
+        public_id: result.public_id,
+        url: result.secure_url
+      })
+    }
+
+    req.body.image = imageLinks
+  }
+
+  product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
 
   if (!product) {
     return next(new HandleError("Product not found", 404))
@@ -184,14 +220,14 @@ export const deleteReview = handleAsyncError(async (req, res, next) => {
     return next(new HandleError("Product not found", 400))
   }
 
-  const reviews = product.reviews.filter( review => review._id.toString() !== req.query.id.toString())
-  
+  const reviews = product.reviews.filter(review => review._id.toString() !== req.query.id.toString())
+
   let sum = 0;
   reviews.forEach(review => {
     sum += review.rating
   })
 
-  const ratings = reviews.length > 0 ? sum/reviews.length : 0
+  const ratings = reviews.length > 0 ? sum / reviews.length : 0
   const numOfReviews = reviews.length;
   await Product.findByIdAndUpdate(req.query.productId, {
     reviews,
