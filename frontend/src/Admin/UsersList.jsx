@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../AdminStyles/UsersList.css";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
@@ -6,13 +6,14 @@ import PageTitle from "../components/PageTitle";
 import { Delete, Edit } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { fetchUsers, removeErrors } from "../features/admin/adminSlice";
+import { clearMessage, deleteUser, fetchUsers, removeErrors } from "../features/admin/adminSlice";
 import Loader from "../components/Loader";
 import { toast } from "react-toastify";
 
 const UsersList = () => {
-  const { users, loading, error } = useSelector((state) => state.admin);
+  const { users, loading, error, message } = useSelector((state) => state.admin);
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   console.log(users);
 
   useEffect(() => {
@@ -25,6 +26,26 @@ const UsersList = () => {
       dispatch(removeErrors());
     }
   }, [dispatch, error]);
+
+  const handleDelete = (userId) => {
+    const confirm = window.confirm("Are you sure you want to delete this user?")
+
+    if (confirm) {
+      dispatch(deleteUser(userId))
+    }
+  } 
+
+    useEffect(() => {
+    if (error) {
+      toast.error(error.message, { position: "top-center", autoClose: 3000 });
+      dispatch(removeErrors());
+    }
+    if (message) {
+      toast.success(message, { position: "top-center", autoClose: 3000 });
+      dispatch(clearMessage());
+      navigate("/admin/dashboard")
+    }
+  }, [dispatch, error, message]);
 
   return (
     <>
@@ -63,7 +84,7 @@ const UsersList = () => {
                         >
                           <Edit />
                         </Link>
-                        <button className="action-icon delete-icon">
+                        <button className="action-icon delete-icon" onClick={() => handleDelete(user._id)}>
                           <Delete />
                         </button>
                       </td>

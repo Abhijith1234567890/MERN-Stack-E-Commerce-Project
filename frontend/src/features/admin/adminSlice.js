@@ -90,6 +90,28 @@ export const updateUserRole = createAsyncThunk("admin/updateUserRole", async ({u
   }
 })
 
+// Delete user profile
+export const deleteUser = createAsyncThunk("admin/deleteUser", async (userId, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.delete(`/api/v1/admin/user/${userId}`)
+    return data
+
+  } catch (error) {
+    return rejectWithValue(error.response?.data || { message: "Failed to delete user" })
+  }
+})
+
+// Fetch All Orders
+export const fetchAllOrders = createAsyncThunk("admin/fetchAllOrders", async (_, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.get(`/api/v1/admin/orders`)
+    return data
+
+  } catch (error) {
+    return rejectWithValue(error.response?.data || { message: "Failed to fetch orders" })
+  }
+})
+
 const adminSlice = createSlice({
   name: "admin",
   initialState: {
@@ -100,14 +122,20 @@ const adminSlice = createSlice({
     product: {},
     deleting: {},
     users: [],
-    user: {}
+    user: {},
+    message: null,
+    orders: [],
+    totalAmount: 0
   },
   reducers: {
     removeErrors: (state) => {
       state.error = null
     },
     removeSuccess: (state) => {
-      state.success = null
+      state.success = false
+    },
+    clearMessage: (state) =>{ 
+      state.message = null
     }
   },
   extraReducers: (builder) => {
@@ -215,8 +243,37 @@ const adminSlice = createSlice({
         state.loading = false
         state.error = action.payload?.message || "Failed to update user role"
       })
+
+      builder
+      .addCase(deleteUser.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        state.loading = false
+        state.message = action.payload.message
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload?.message || "Failed to delete user"
+      })
+
+      builder
+      .addCase(fetchAllOrders.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(fetchAllOrders.fulfilled, (state, action) => {
+        state.loading = false
+        state.orders = action.payload.orders
+        state.totalAmount = action.payload.totalAmount
+      })
+      .addCase(fetchAllOrders.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload?.message || "Failed to fetch orders"
+      })
   }
 })
 
-export const { removeErrors, removeSuccess } = adminSlice.actions
+export const { removeErrors, removeSuccess, clearMessage } = adminSlice.actions
 export default adminSlice.reducer
