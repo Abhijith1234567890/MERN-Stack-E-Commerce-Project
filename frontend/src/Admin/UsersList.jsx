@@ -13,7 +13,6 @@ import { toast } from "react-toastify";
 const UsersList = () => {
   const { users, loading, error, message } = useSelector((state) => state.admin);
   const dispatch = useDispatch();
-  const navigate = useNavigate()
   console.log(users);
 
   useEffect(() => {
@@ -43,7 +42,7 @@ const UsersList = () => {
     if (message) {
       toast.success(message, { position: "top-center", autoClose: 3000 });
       dispatch(clearMessage());
-      navigate("/admin/dashboard")
+      dispatch(fetchUsers())
     }
   }, [dispatch, error, message]);
 

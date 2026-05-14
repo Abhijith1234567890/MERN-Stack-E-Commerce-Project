@@ -27,7 +27,7 @@ export const getAllMyOrder = createAsyncThunk("order/getAllMyOrder", async (_, {
   }
 })
 
-// Get User Details
+// Get Order Details
 export const getOrderDetails = createAsyncThunk("order/getOrderDetails", async (orderID, { rejectWithValue }) => {
   try {
     const { data } = await axios.get(`/api/v1/order/${orderID}`)
