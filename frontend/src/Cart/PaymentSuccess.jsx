@@ -52,7 +52,6 @@ const PaymentSuccess = () => {
           shippingPrice: orderItem.shippingCharges,
           totalPrice: orderItem.total,
         };
-        console.log("Sending Data", orderData);
         dispatch(createOrder(orderData));
         sessionStorage.removeItem("orderItem");
       } catch (error) {

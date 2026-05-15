@@ -18,7 +18,6 @@ const Login = () => {
 
   const loginSubmit = (e) => {
     e.preventDefault();
-    console.log("hello");
     dispatch(login({ email: loginEmail, password: loginPassword }));
   };
 

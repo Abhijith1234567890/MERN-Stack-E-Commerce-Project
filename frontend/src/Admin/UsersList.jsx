@@ -13,7 +13,6 @@ import { toast } from "react-toastify";
 const UsersList = () => {
   const { users, loading, error, message } = useSelector((state) => state.admin);
   const dispatch = useDispatch();
-  console.log(users);
 
   useEffect(() => {
     dispatch(fetchUsers());

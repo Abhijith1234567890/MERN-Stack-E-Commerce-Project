@@ -10,7 +10,6 @@ export const register = createAsyncThunk("user/register", async (userData, { rej
       }
     }
     const { data } = await axios.post("/api/v1/register", userData, config)
-    console.log("Registration data", data);
     return data
 
   } catch (error) {
@@ -26,7 +25,6 @@ export const login = createAsyncThunk("user/login", async ({ email, password }, 
       }
     }
     const { data } = await axios.post("/api/v1/login", { email, password }, config)
-    console.log("Login data", data);
     return data
 
   } catch (error) {
@@ -171,7 +169,6 @@ const userSlice = createSlice({
         state.success = action.payload.success
         state.user = action.payload?.user || null
         state.isAuthenticated = Boolean(action.payload?.user)
-        console.log(state.user);
         
         // Store in localStorage
         localStorage.setItem("user", JSON.stringify(state.user))

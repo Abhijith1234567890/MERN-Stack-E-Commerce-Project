@@ -80,9 +80,9 @@ export const getSingleUser = createAsyncThunk("admin/getSingleUser", async (id, 
 })
 
 // Update User role
-export const updateUserRole = createAsyncThunk("admin/updateUserRole", async ({userId, role}, { rejectWithValue }) => {
+export const updateUserRole = createAsyncThunk("admin/updateUserRole", async ({ userId, role }, { rejectWithValue }) => {
   try {
-    const { data } = await axios.put(`/api/v1/admin/user/${userId}`, {role})
+    const { data } = await axios.put(`/api/v1/admin/user/${userId}`, { role })
     return data
 
   } catch (error) {
@@ -113,7 +113,7 @@ export const fetchAllOrders = createAsyncThunk("admin/fetchAllOrders", async (_,
 })
 
 // Update Order Status
-export const updateOrderStatus = createAsyncThunk("admin/updateOrderStatus", async ({orderId, status}, { rejectWithValue }) => {
+export const updateOrderStatus = createAsyncThunk("admin/updateOrderStatus", async ({ orderId, status }, { rejectWithValue }) => {
   try {
     const config = {
       headers: {
@@ -121,7 +121,7 @@ export const updateOrderStatus = createAsyncThunk("admin/updateOrderStatus", asy
       }
     }
 
-    const { data } = await axios.put(`/api/v1/admin/order/${orderId}`, {status}, config)
+    const { data } = await axios.put(`/api/v1/admin/order/${orderId}`, { status }, config)
     return data
 
   } catch (error) {
@@ -140,6 +140,28 @@ export const deleteOrder = createAsyncThunk("admin/deleteOrder", async (orderId,
   }
 })
 
+// Fetch all reviews
+export const fetchProductReviews = createAsyncThunk("admin/fetchProductReviews", async (productId, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.get(`/api/v1/admin/reviews?id=${productId}`)
+    return data
+
+  } catch (error) {
+    return rejectWithValue(error.response?.data || { message: "Failed to Fetch Product Reviews" })
+  }
+})
+
+// Delete review
+export const deleteReview = createAsyncThunk("admin/deleteReview", async ({ productId, reviewId }, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.delete(`/api/v1/admin/reviews?productId=${productId}&id=${reviewId}`)
+    return data
+
+  } catch (error) {
+    return rejectWithValue(error.response?.data || { message: "Failed to Delete Product Review" })
+  }
+})
+
 const adminSlice = createSlice({
   name: "admin",
   initialState: {
@@ -154,7 +176,8 @@ const adminSlice = createSlice({
     message: null,
     orders: [],
     totalAmount: 0,
-    order: {}
+    order: {},
+    reviews: []
   },
   reducers: {
     removeErrors: (state) => {
@@ -163,7 +186,7 @@ const adminSlice = createSlice({
     removeSuccess: (state) => {
       state.success = false
     },
-    clearMessage: (state) =>{ 
+    clearMessage: (state) => {
       state.message = null
     }
   },
@@ -191,8 +214,6 @@ const adminSlice = createSlice({
         state.loading = false
         state.success = action.payload.success
         state.products.push(action.payload.product)
-        console.log(state.products);
-
       })
       .addCase(createProduct.rejected, (state, action) => {
         state.loading = false
@@ -231,7 +252,7 @@ const adminSlice = createSlice({
         state.error = action.payload?.message || "Product Deletion Failed"
       })
 
-      builder
+    builder
       .addCase(fetchUsers.pending, (state) => {
         state.loading = true
         state.error = null
@@ -245,7 +266,7 @@ const adminSlice = createSlice({
         state.error = action.payload?.message || "Failed to fetch users"
       })
 
-      builder
+    builder
       .addCase(getSingleUser.pending, (state) => {
         state.loading = true
         state.error = null
@@ -259,7 +280,7 @@ const adminSlice = createSlice({
         state.error = action.payload?.message || "Failed to fetch user"
       })
 
-      builder
+    builder
       .addCase(updateUserRole.pending, (state) => {
         state.loading = true
         state.error = null
@@ -273,7 +294,7 @@ const adminSlice = createSlice({
         state.error = action.payload?.message || "Failed to update user role"
       })
 
-      builder
+    builder
       .addCase(deleteUser.pending, (state) => {
         state.loading = true
         state.error = null
@@ -287,7 +308,7 @@ const adminSlice = createSlice({
         state.error = action.payload?.message || "Failed to delete user"
       })
 
-      builder
+    builder
       .addCase(fetchAllOrders.pending, (state) => {
         state.loading = true
         state.error = null
@@ -302,7 +323,7 @@ const adminSlice = createSlice({
         state.error = action.payload?.message || "Failed to fetch orders"
       })
 
-      builder
+    builder
       .addCase(updateOrderStatus.pending, (state) => {
         state.loading = true
         state.error = null
@@ -317,7 +338,7 @@ const adminSlice = createSlice({
         state.error = action.payload?.message || "Failed to update order status"
       })
 
-      builder
+    builder
       .addCase(deleteOrder.pending, (state) => {
         state.loading = true
         state.error = null
@@ -330,6 +351,35 @@ const adminSlice = createSlice({
       .addCase(deleteOrder.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload?.message || "Failed to delete order"
+      })
+
+    builder
+      .addCase(fetchProductReviews.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(fetchProductReviews.fulfilled, (state, action) => {
+        state.loading = false
+        state.reviews = action.payload.reviews
+      })
+      .addCase(fetchProductReviews.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload?.message || "Failed to Fetch Product Reviews"
+      })
+
+    builder
+      .addCase(deleteReview.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(deleteReview.fulfilled, (state, action) => {
+        state.loading = false
+        state.success = action.payload.success
+        state.message = action.payload.message
+      })
+      .addCase(deleteReview.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload?.message || "Failed to Delete Product Reviews"
       })
   }
 })

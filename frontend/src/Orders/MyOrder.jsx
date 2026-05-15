@@ -12,7 +12,6 @@ import Loader from "../components/Loader";
 
 const MyOrder = () => {
   const { orders, loading, error } = useSelector((state) => state.order);
-  console.log(orders);
 
   const dispatch = useDispatch();
 

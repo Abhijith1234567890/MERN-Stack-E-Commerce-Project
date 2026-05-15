@@ -51,11 +51,7 @@ const Register = () => {
     myForm.set("email", email);
     myForm.set("password", password);
     myForm.set("avatar", avatar);
-    console.log(myForm.entries());
 
-    for (let pair of myForm.entries()) {
-      console.log(pair);
-    }
     dispatch(register(myForm));
   };
 

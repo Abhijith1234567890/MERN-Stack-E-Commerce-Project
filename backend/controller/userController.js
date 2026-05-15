@@ -77,8 +77,6 @@ export const requestPasswordReset = handleAsyncError(async (req, res, next) => {
     await user.save({ validateBeforeSave: false })
 
   } catch (error) {
-    console.log(error);
-
     return next(new HandleError(" Could not save reset token please try again later ", 500))
   }
 
