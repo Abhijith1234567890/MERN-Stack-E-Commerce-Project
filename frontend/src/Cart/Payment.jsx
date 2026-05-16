@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import PageTitle from "../components/PageTitle";
 import CheckoutPath from "./CheckoutPath";
-import axios from "axios";
+import axios from '../../config/axiosInstance'
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
