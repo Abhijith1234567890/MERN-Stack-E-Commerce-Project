@@ -30,26 +30,13 @@ const UpdateProduct = () => {
   const { updateId } = useParams();
 
   const categories = [
-    "Electronics",
-    "Fashion",
-    "Home & Kitchen",
-    "Sports & Outdoors",
-    "Books",
-    "Toys & Games",
-    "Health & Beauty",
-    "Automotive",
-    "Grocery & Food",
-    "Jewelry & Accessories",
-    "Baby & Kids",
-    "Pet Supplies",
-    "Music & Instruments",
-    "Office Supplies",
-    "Garden & Outdoors",
-    "Movies & Entertainment",
-    "Furniture",
-    "Art & Crafts",
-    "Software",
-    "Travel & Luggage",
+    "laptop",
+    "mobile",
+    "tv",
+    "watch",
+    "fashion",
+    "footware",
+    "headphone",
   ];
 
   useEffect(() => {

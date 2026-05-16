@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import axios from '../../config/axiosInstance'
 
 // Register API
 export const register = createAsyncThunk("user/register", async (userData, { rejectWithValue }) => {

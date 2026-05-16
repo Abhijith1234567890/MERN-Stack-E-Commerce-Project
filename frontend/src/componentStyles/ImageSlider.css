@@ -50,7 +50,7 @@
 
 @media (max-width: 768px) {
   .image-slider-container {
-    height: 300px;
+    height: 250px;
   }
 
   .slider-item img {

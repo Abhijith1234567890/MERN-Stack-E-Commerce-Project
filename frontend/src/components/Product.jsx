@@ -11,14 +11,14 @@ const Product = ({ product }) => {
   return (
     <Link to={`/product/${product._id}`} className="product_id">
       <div className="product-card">
-        <img src={product.image[0].url} alt={product.name} />
+        <img className="product-img" src={product.image[0].url} alt={product.name} />
         <div className="product-details">
           <h3 className="product-title">{product.name}</h3>
           <p className="home-price">
             <strong>Price: </strong>
             {product.price}/-
           </p>
-          <div className="rating-container">
+          <div className="rating_container">
             <Rating 
              value = {product.ratings}
              onRatingChange = {handleRatingChange}

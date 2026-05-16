@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import PageTitle from "../components/PageTitle";
 import "../pageStyles/Products.css";
 import { useDispatch, useSelector } from "react-redux";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Product from "../components/Product";
 import { useEffect, useState } from "react";
 import { getProduct, removeErrors } from "../features/products/productSlice";
@@ -23,7 +24,16 @@ const Products = () => {
   const pageFromURL = parseInt(searchParams.get("page"), 10) || 1;
   const [currentPage, setCurrentPage] = useState(pageFromURL);
   const navigate = useNavigate();
-  const categories = ["laptop", "mobile", "tv", "fruits", "glass"];
+  const categories = [
+    "laptop",
+    "mobile",
+    "tv",
+    "watch",
+    "fashion",
+    "footware",
+    "headphone",
+  ];
+  const [toggle, setToggle] = useState(false);
 
   useEffect(() => {
     dispatch(getProduct({ keyword, page: currentPage, category }));
@@ -68,9 +78,14 @@ const Products = () => {
           <Navbar />
           <div className="products-layout">
             <div className="filter-section">
-              <h3 className="filter-heading">CATEGORIES</h3>
+              <div className="filter-head-group">
+                <h3 className="filter-heading">CATEGORIES</h3>
+                <div className={`drop-down-icon ${toggle ? "rotated" : ""}`}>
+                  <ExpandMoreIcon onClick={() => setToggle(!toggle)} />
+                </div>
+              </div>
               {/* Render categories */}
-              <ul>
+              <ul className={toggle ? "active" : ""}>
                 {categories.map((category) => {
                   return (
                     <li

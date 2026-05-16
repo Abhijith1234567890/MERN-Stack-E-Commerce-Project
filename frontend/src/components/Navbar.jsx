@@ -33,10 +33,19 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <div className="navbar-logo">
-          <Link to="/" onClick={() => setIsMenuOpen(false)}>
-            <img src="../images/Nexcart-logo.png" alt="logo" />
-          </Link>
+        <div className="menu-logo-group">
+          <div className="navbar-hamburger" onClick={toggelMenu}>
+            {isMenuOpen ? (
+              <Close className="icon" />
+            ) : (
+              <Menu className="icon" />
+            )}
+          </div>
+          <div className="navbar-logo">
+            <Link to="/" onClick={() => setIsMenuOpen(false)}>
+              <img src="../images/Nexcart-logo.png" alt="logo" />
+            </Link>
+          </div>
         </div>
 
         <div className={`navbar-links ${isMenuOpen ? "active" : ""}`}>
@@ -93,13 +102,6 @@ const Navbar = () => {
               <PersonAdd className="icon" />
             </Link>
           )}
-          <div className="navbar-hamburger" onClick={toggelMenu}>
-            {isMenuOpen ? (
-              <Close className="icon" />
-            ) : (
-              <Menu className="icon" />
-            )}
-          </div>
         </div>
       </div>
     </nav>
