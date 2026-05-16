@@ -56,15 +56,11 @@
     background: var(--primary-main);
     border-radius: 50%;
   }
-
   
   .filters-container {
     flex: 1 0 25%; 
     max-width: 300px; 
   }
-  
-  
-  
 
   @media (max-width: 768px) {
 

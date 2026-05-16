@@ -9,7 +9,6 @@ import {
   ShoppingCart,
   Star,
   Error,
-  LinkedIn,
 } from "@mui/icons-material";
 import Navbar from "../components/Navbar";
 import PageTitle from "../components/PageTitle";
@@ -118,13 +117,6 @@ const Dashboard = () => {
               <CheckCircle className="icon" />
               <h3>In Stock</h3>
               <p>{inStock}</p>
-            </div>
-          </div>
-
-          <div className="social-stats">
-            <div className="social-box linkedin">
-              <LinkedIn/>
-              <h3>LinkedIn</h3>
             </div>
           </div>
         </div>

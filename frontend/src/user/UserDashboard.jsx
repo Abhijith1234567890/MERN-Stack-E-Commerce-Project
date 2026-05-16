@@ -71,7 +71,6 @@ const UserDashboard = ({ user }) => {
             alt="Profile Picture"
             className="profile-avatar"
           />
-          <span className="profile-name">{user.name}</span>
         </div>
         {menuVisible && (
           <div className="menu-options">

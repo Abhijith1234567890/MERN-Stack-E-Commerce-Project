@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import { loadUser } from "./features/user/userSlice";
 import UserDashboard from "./user/UserDashboard";
 import Profile from "./user/Profile";
-import ProtectedRoute from "./componentStyles/ProtectedRoute";
+import ProtectedRoute from "./components/ProtectedRoute";
 import UpdateProfile from "./user/UpdateProfile";
 import UpdatePassword from "./user/UpdatePassword";
 import ForgotPassword from "./user/ForgotPassword";

@@ -58,8 +58,8 @@ const ForgotPassword = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
-                  <button className="authBtn">Send</button>
                 </div>
+                <button className="authBtn">Send</button>
               </form>
             </div>
           </div>

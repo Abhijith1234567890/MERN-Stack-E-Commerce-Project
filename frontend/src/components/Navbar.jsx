@@ -35,7 +35,7 @@ const Navbar = () => {
       <div className="navbar-container">
         <div className="navbar-logo">
           <Link to="/" onClick={() => setIsMenuOpen(false)}>
-            ShopEasy
+            <img src="../images/Nexcart-logo.png" alt="logo" />
           </Link>
         </div>
 

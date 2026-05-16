@@ -1,11 +1,12 @@
-import "../componentStyles/Loader.css"
+import "../componentStyles/Loader.css";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Loader = () => {
   return (
-    <div className='loader-container'>
-      <div className='loader'></div>
+    <div className="loader-container">
+      <CircularProgress />
     </div>
-  )
-}
+  );
+};
 
-export default Loader
+export default Loader;
