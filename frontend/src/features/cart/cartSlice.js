@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from '../../config/axiosInstance'
+import axiosInstance from '../../config/axiosInstance'
 
 // Add items to cart
 export const addItemsToCart = createAsyncThunk("cart/addItemsToCart", async ({ id, quantity }, { rejectWithValue }) => {
   try {
-    const { data } = await axios.get(`/api/v1/product/${id}`)
+    const { data } = await axiosInstance.get(`/api/v1/product/${id}`)
 
     return {
       product: data.product._id,
@@ -67,7 +67,7 @@ const cartSlice = createSlice({
           state.message = `Updated ${item.name} quantity in the cart`
         } else {
           state.cartItems.push(item)
-          state.message = `${item.name}Item is added to cart successfully`
+          state.message = `${item.name} Item is added to cart successfully`
         }
 
         state.loading = false

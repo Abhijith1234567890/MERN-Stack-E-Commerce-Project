@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import PageTitle from "../components/PageTitle";
 import CheckoutPath from "./CheckoutPath";
-import axios from '../config/axiosInstance'
+import axiosInstance from '../config/axiosInstance'
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
@@ -16,9 +16,9 @@ const Payment = () => {
 
   const completePayment = async (amount) => {
     try {
-      const { data: keyData } = await axios.get("/api/v1/getKey");
+      const { data: keyData } = await axiosInstance.get("/api/v1/getKey");
       const { key } = keyData;
-      const { data: orderData } = await axios.post("/api/v1/payment/process", {
+      const { data: orderData } = await axiosInstance.post("/api/v1/payment/process", {
         amount,
       });
       const { order } = orderData;
@@ -32,7 +32,7 @@ const Payment = () => {
         description: "Ecommerce Website Payment Transaction",
         order_id: order.id,
         handler: async function (response) {
-          const { data } = await axios.post(
+          const { data } = await axiosInstance.post(
             "/api/v1/paymentVerification",
             response,
           );

@@ -2,7 +2,7 @@ import app from "./app.js"
 import dotenv from "dotenv"
 import { connectMongoDatabase } from "./config/db.js"
 if (process.env.NODE_ENV !== "PRODUCTION") {
-  dotenv.config({ path: "backend/config/config.env" })
+  dotenv.config({ path: "config/config.env" })
 }
 import { v2 as cloudinary } from "cloudinary"
 import Razorpay from "razorpay"

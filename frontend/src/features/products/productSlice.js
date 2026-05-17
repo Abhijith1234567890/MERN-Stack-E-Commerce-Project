@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
-import axios from '../../config/axiosInstance'
+import axiosInstance from '../../config/axiosInstance'
 
 
 export const getProduct = createAsyncThunk("product/getProduct", async ({ keyword, page = 1, category }, { rejectWithValue }) => {
@@ -14,7 +14,7 @@ export const getProduct = createAsyncThunk("product/getProduct", async ({ keywor
       link += `&keyword=${keyword}`
     }
     // const link = keyword ? `/api/v1/products?keyword=${encodeURIComponent(keyword)}&page=${page}` : `/api/v1/products?page=${page}`
-    const { data } = await axios.get(link)
+    const { data } = await axiosInstance.get(link)
 
     return data
   } catch (error) {
@@ -26,7 +26,7 @@ export const getProduct = createAsyncThunk("product/getProduct", async ({ keywor
 export const getProductDetails = createAsyncThunk("product/getProductDetails", async (id, { rejectWithValue }) => {
   try {
     const link = `/api/v1/product/${id}`
-    const { data } = await axios.get(link)
+    const { data } = await axiosInstance.get(link)
     return data
 
   } catch (error) {
@@ -43,7 +43,7 @@ export const createReview = createAsyncThunk("product/createReview", async ({rat
       }
     }
 
-    const { data } = await axios.put("/api/v1/review", {rating, comment, productId}, config)
+    const { data } = await axiosInstance.put("/api/v1/review", {rating, comment, productId}, config)
     return data
 
   } catch (error) {

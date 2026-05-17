@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from '../../config/axiosInstance'
+import axiosInstance from '../../config/axiosInstance'
 
 // Register API
 export const register = createAsyncThunk("user/register", async (userData, { rejectWithValue }) => {
@@ -9,7 +9,7 @@ export const register = createAsyncThunk("user/register", async (userData, { rej
         "Content-Type": "multipart/form-data"
       }
     }
-    const { data } = await axios.post("/api/v1/register", userData, config)
+    const { data } = await axiosInstance.post("/api/v1/register", userData, config)
     return data
 
   } catch (error) {
@@ -24,7 +24,7 @@ export const login = createAsyncThunk("user/login", async ({ email, password }, 
         "Content-Type": "application/json"
       }
     }
-    const { data } = await axios.post("/api/v1/login", { email, password }, config)
+    const { data } = await axiosInstance.post("/api/v1/login", { email, password }, config)
     return data
 
   } catch (error) {
@@ -34,7 +34,7 @@ export const login = createAsyncThunk("user/login", async ({ email, password }, 
 
 export const loadUser = createAsyncThunk("user/loadUser", async (_, { rejectWithValue }) => {
   try {
-    const { data } = await axios.get("/api/v1/profile")
+    const { data } = await axiosInstance.get("/api/v1/profile")
     return data
 
   } catch (error) {
@@ -44,7 +44,7 @@ export const loadUser = createAsyncThunk("user/loadUser", async (_, { rejectWith
 
 export const logout = createAsyncThunk("user/logout", async (_, { rejectWithValue }) => {
   try {
-    const { data } = await axios.post("/api/v1/logout", { withCredentials: true })
+    const { data } = await axiosInstance.post("/api/v1/logout", { withCredentials: true })
     return data
 
   } catch (error) {
@@ -60,7 +60,7 @@ export const updateProfile = createAsyncThunk("user/updateProfile", async (userD
       }
     }
 
-    const { data } = await axios.put("/api/v1/profile/update", userData, config)
+    const { data } = await axiosInstance.put("/api/v1/profile/update", userData, config)
     return data
 
   } catch (error) {
@@ -76,7 +76,7 @@ export const updatePassword = createAsyncThunk("user/updatePassword", async (for
       }
     }
 
-    const { data } = await axios.put("/api/v1/password/update", formData, config)
+    const { data } = await axiosInstance.put("/api/v1/password/update", formData, config)
     return data
 
   } catch (error) {
@@ -92,7 +92,7 @@ export const forgotPassword = createAsyncThunk("user/forgotPassword", async (ema
       }
     }
 
-    const { data } = await axios.post("/api/v1/password/forgot", email, config)
+    const { data } = await axiosInstance.post("/api/v1/password/forgot", email, config)
     return data
 
   } catch (error) {
@@ -108,7 +108,7 @@ export const resetPassword = createAsyncThunk("user/resetPassword", async ({ tok
       }
     }
 
-    const { data } = await axios.post(`/api/v1/reset/${token}`, userData, config)
+    const { data } = await axiosInstance.post(`/api/v1/reset/${token}`, userData, config)
     return data
 
   } catch (error) {

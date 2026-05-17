@@ -12,24 +12,23 @@ import path from "path"
 import { fileURLToPath } from "url"
 
 if (process.env.NODE_ENV !== "PRODUCTION") {
-  dotenv.config({ path: "backend/config/config.env" })
+  dotenv.config({ path: "config/config.env" })
 }
-
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const app = express()
 
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true,
+}))
+
 // Middleware
 app.use(express.json())
 app.use(cookieParser())
 app.use(fileUpload())
-
-app.use(cors({
-  origin: process.env.CLIENT_URL || "http://localhost:5173",
-  credentials: true,
-}))
 
 // Route
 app.use("/api/v1", product)
@@ -37,11 +36,11 @@ app.use("/api/v1", user)
 app.use("/api/v1", order)
 app.use("/api/v1", payment)
 
-// Server static files
-app.use(express.static(path.join(__dirname, "../frontend/dist")))
-app.get((_, res) => {
-  res.sendFile(path.resolve(__dirname, "../frontend/dist/index.html"))
-})
+// // Server static files
+// app.use(express.static(path.join(__dirname, "../frontend/dist")))
+// app.get("*", (_, res) => {
+//   res.sendFile(path.resolve(__dirname, "../frontend/dist/index.html"))
+// })
 
 app.use(errorHandleMiddleware)
 
