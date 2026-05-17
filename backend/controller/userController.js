@@ -101,6 +101,7 @@ export const requestPasswordReset = handleAsyncError(async (req, res, next) => {
     })
 
   } catch (error) {
+    console.log("SMTP ERROR:", error.message)
     user.resetPasswordToken = undefined
     user.resetPasswordExpire = undefined
     await user.save({ validateBeforeSave: false })

@@ -42,7 +42,7 @@ const Profile = () => {
               <p>{user.email}</p>
             </div>
             <div className="profile-detail">
-              <h2>Joine on:</h2>
+              <h2>Joined on:</h2>
               <p>
                 {user.createdAt
                   ? String(user.createdAt).substring(0, 10)
