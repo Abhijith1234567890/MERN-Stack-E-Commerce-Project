@@ -66,7 +66,7 @@ const Login = () => {
           </div>
           <button className="authBtn">Sign In</button>
           <p className="form-links">
-            Forgot yout password? <Link to="/password/forgot">Reset Here</Link>
+            Forgot your password? <Link to="/password/forgot">Reset here</Link>
           </p>
           <p className="form-links">
             Don't have an account? <Link to="/register">Sign up here</Link>

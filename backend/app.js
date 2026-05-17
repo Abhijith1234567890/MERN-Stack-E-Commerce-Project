@@ -11,7 +11,7 @@ import dotenv from "dotenv"
 import path from "path"
 import { fileURLToPath } from "url"
 
-if (process.env.NODE_ENV !== "PRODUCTION") {
+if (process.env.NODE_ENV !== "production") {
   dotenv.config({ path: "config/config.env" })
 }
 

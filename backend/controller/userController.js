@@ -52,9 +52,12 @@ export const loginUser = handleAsyncError(async (req, res, next) => {
 
 // Logout
 export const logout = handleAsyncError(async (req, res, next) => {
+  const isProduction = process.env.NODE_ENV === "production"
   res.cookie("token", null, {
     expires: new Date(Date.now()),
-    httpOnly: true
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
   })
   res.status(200).json({
     success: true,
@@ -177,8 +180,8 @@ export const updateProfile = handleAsyncError(async (req, res, next) => {
       width: "150",
       crop: "scale"
     })
-    
-    updateUserDetails.avatar ={
+
+    updateUserDetails.avatar = {
       public_id: myCloud.public_id,
       url: myCloud.secure_url
     }
@@ -250,7 +253,7 @@ export const deleteUser = handleAsyncError(async (req, res, next) => {
 
   const imageId = user.avatar.public_id
   await cloudinary.uploader.destroy(imageId)
-  
+
   await User.findByIdAndDelete(req.params.id)
 
   res.status(200).json({
