@@ -205,7 +205,3 @@ Main route groups:
 - Set `CLIENT_URL` to your deployed frontend URL.
 - Set `VITE_API_URL` to your deployed backend API URL ending with `/api/v1`.
 - Make sure cookies, CORS, and production environment settings match your deployment domain.
-
-## Author
-
-Created as a MERN stack final project.
