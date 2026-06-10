@@ -1,7 +1,7 @@
 import app from "./app.js"
 import dotenv from "dotenv"
 import { connectMongoDatabase } from "./config/db.js"
-if (process.env.NODE_ENV !== "PRODUCTION") {
+if (process.env.NODE_ENV !== "production") {
   dotenv.config({ path: "config/config.env" })
 }
 import { v2 as cloudinary } from "cloudinary"
