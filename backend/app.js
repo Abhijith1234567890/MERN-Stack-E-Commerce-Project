@@ -8,10 +8,6 @@ import cookieParser from "cookie-parser"
 import cors from "cors"
 import dotenv from "dotenv"
 
-if (process.env.NODE_ENV !== "production") {
-  dotenv.config({ path: "config/config.env" })
-}
-
 const app = express()
 
 app.use(cors({
